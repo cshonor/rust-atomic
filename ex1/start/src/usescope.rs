@@ -1,5 +1,6 @@
 use std::thread;
 fn main() {
+    let mut v = vec![1, 2, 3];
     let x = 1;
     let y = 2;
     let z = 3;
@@ -16,13 +17,12 @@ fn main() {
             println!("x: {}", x);
             println!("y: {}", y);
             println!("z: {}", z);
-        });
+        })
+        s.spawn(move || {
+            println!("v: {:?}", v);
+        })//scope.spawn 启动的线程没有先后保证，哪一个先运行、先打印完全由操作系统调度决定。同一个程序每次执行，输出顺序都可能不同。如果需要确定顺序，必须显式同步，比如在一个线程里等待另一个线程完成后再继续。
+        ;
     });
 //新版 thread::scope 则通常依赖作用域结束时自动等待所有子线程完成，
 // 避免了显式 join 的遗漏问题，更符合 Rust 的惯用写法。
-}
-fn f(s: &Scope) {
-    println!("x: {}", x);
-    println!("y: {}", y);
-    println!("z: {}", z);
 }
